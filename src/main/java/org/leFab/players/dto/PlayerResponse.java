@@ -1,4 +1,6 @@
-package org.example.tennis.DTO;
+package org.leFab.players.dto;
+
+import org.leFab.rank.dto.Rank;
 
 import java.time.LocalDate;
 

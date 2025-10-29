@@ -1,9 +1,9 @@
-package org.example.tennis.restControllers;
+package org.leFab.health.restControllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.example.tennis.DTO.HealthCheck;
-import org.example.tennis.services.interfaces.HealthCheckService;
+import org.leFab.health.DTO.HealthCheck;
+import org.leFab.health.services.interfaces.HealthCheckService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

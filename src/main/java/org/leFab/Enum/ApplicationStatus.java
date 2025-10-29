@@ -1,4 +1,4 @@
-package org.example.tennis.Enum;
+package org.leFab.Enum;
 
 public enum ApplicationStatus {
     OK,

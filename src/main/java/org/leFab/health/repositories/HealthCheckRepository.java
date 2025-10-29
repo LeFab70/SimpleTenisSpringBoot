@@ -1,4 +1,4 @@
-package org.example.tennis.repositories;
+package org.leFab.health.repositories;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;

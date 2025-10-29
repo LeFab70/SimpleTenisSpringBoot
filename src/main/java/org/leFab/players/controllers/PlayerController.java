@@ -1,4 +1,4 @@
-package org.example.tennis.restControllers;
+package org.leFab.players.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -8,8 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.example.tennis.DTO.PlayerRequest;
-import org.example.tennis.DTO.PlayerResponse;
+import org.leFab.players.dto.PlayerRequest;
+import org.leFab.players.dto.PlayerResponse;
+import org.leFab.rank.dto.Rank;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -41,15 +42,33 @@ public class PlayerController {
     @Operation(summary = "Find the players by id", description = "Retrieves the player by name.")
     @GetMapping("/{id}")
     public PlayerResponse getPlayerById(@PathVariable("id") String id){
+
         return null;
     }
 
 
+//save player
+//    @Operation(summary = "save player", description = "save player.")
+//    @PostMapping()
+//    public ResponseEntity<String> savePlayer(@Valid @RequestBody PlayerRequest playerRequest){
+//        Random random = new Random();
+//        if(random.nextBoolean()){
+//            return ResponseEntity.status(HttpStatus.CREATED).build();
+//        }
+//        throw new BadRequestException("Invalid request");
+//
+//    }
 
     @Operation(summary = "save player", description = "save player.")
     @PostMapping()
     public PlayerResponse savePlayer(@Valid @RequestBody PlayerRequest playerRequest){
-        return null;
+      return new PlayerResponse(
+              playerRequest.firstName(),
+              playerRequest.lastName(),
+              playerRequest.birthDay(),
+              new Rank(1,10)
+      );
+
     }
 
 

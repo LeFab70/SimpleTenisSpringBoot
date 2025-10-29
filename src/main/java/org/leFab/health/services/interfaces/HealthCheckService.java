@@ -1,6 +1,6 @@
-package org.example.tennis.services.interfaces;
+package org.leFab.health.services.interfaces;
 
-import org.example.tennis.DTO.HealthCheck;
+import org.leFab.health.DTO.HealthCheck;
 
 // Service interface for health check functionality
 public interface HealthCheckService {

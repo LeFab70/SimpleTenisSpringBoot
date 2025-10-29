@@ -1,21 +1,23 @@
-package org.example.tennis.services.implementations;
+package org.leFab.health.services.implementations;
 
-import org.example.tennis.Enum.ApplicationStatus;
-import org.example.tennis.DTO.HealthCheck;
-import org.example.tennis.repositories.HealthCheckRepository;
-import org.example.tennis.services.interfaces.HealthCheckService;
+import lombok.RequiredArgsConstructor;
+import org.leFab.Enum.ApplicationStatus;
+import org.leFab.health.DTO.HealthCheck;
+import org.leFab.health.repositories.HealthCheckRepository;
+import org.leFab.health.services.interfaces.HealthCheckService;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 // Service implementation for health check functionality
 public class HealthCheckServiceImplement implements HealthCheckService {
 
     //injection of dependencies if needed (none in this case) repositories, other services, etc.
     private final HealthCheckRepository healthCheckRepository;
 
-    public HealthCheckServiceImplement(HealthCheckRepository healthCheckRepository) {
-        this.healthCheckRepository = healthCheckRepository;
-    }
+//    public HealthCheckServiceImplement(HealthCheckRepository healthCheckRepository) {
+//        this.healthCheckRepository = healthCheckRepository;
+//    }
 
 
     // Implementation of the health check method

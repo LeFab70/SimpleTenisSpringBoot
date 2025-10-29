@@ -1,8 +1,8 @@
-package org.example.tennis.DTO;
+package org.leFab.health.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.example.tennis.Enum.ApplicationStatus;
+import org.leFab.Enum.ApplicationStatus;
 
 public record HealthCheck(ApplicationStatus status,
                           @NotBlank(message = "Message cannot be blank")
