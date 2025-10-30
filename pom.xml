@@ -30,6 +30,13 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>11.15.0</version>
+        </dependency>
+
         <dependency>
             <groupId>com.google.googlejavaformat</groupId>
             <artifactId>google-java-format</artifactId>
@@ -96,5 +103,13 @@
 
         </plugins>
     </build>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>11.15.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
