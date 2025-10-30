@@ -8,97 +8,81 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.leFab.players.dto.PlayerRequest;
 import org.leFab.players.dto.PlayerResponse;
+import org.leFab.players.services.interfaces.PlayerService;
 import org.leFab.rank.dto.Rank;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/tennis/players")
 @Tag(name = "players rest controller", description = "Endpoint for players")
+@RequiredArgsConstructor
 public class PlayerController {
+
+    //injection of dependencies
+    private final PlayerService playerService;
+
+
     @Operation(summary = "Get all players", description = "Retrieves the list of players.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Players list",
+
                     content = {@Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = PlayerResponse.class)))})})
-
     @GetMapping()
-    public List<PlayerResponse> getAllPlayers(){
-        return Collections.emptyList();
+    public ResponseEntity<List<PlayerResponse>> getAllPlayers(){
+        return playerService.getPlayers();// Collections.emptyList();
     }
 
-    @Operation(summary = "Find the players", description = "Retrieves the player by name.")
-    @GetMapping("/{lastName}")
-    public PlayerResponse getPlayer(@PathVariable("lastName") String lastName){
-        return null;
+
+    @Operation(summary = "Find the players by lastname firstname datebirth", description = "Retrieves the player by name.")
+    @GetMapping("/search")
+    public ResponseEntity<PlayerResponse> getPlayer(@RequestParam(required = false,name = "lastName") String lastName,
+                                    @RequestParam(required = false,name = "firstName") String firstName,
+                                    @RequestParam(required = false,name = "birthDay") LocalDate birthDay)
+    {
+        return playerService.getPlayerSearch(firstName,lastName,birthDay);
     }
 
 
     @Operation(summary = "Find the players by id", description = "Retrieves the player by name.")
     @GetMapping("/{id}")
-    public PlayerResponse getPlayerById(@PathVariable("id") String id){
-
-        return null;
+    public ResponseEntity<PlayerResponse> getPlayerById(@PathVariable("id") String id){
+        return playerService.getPlayerById(id);
     }
 
-
-//save player
-//    @Operation(summary = "save player", description = "save player.")
-//    @PostMapping()
-//    public ResponseEntity<String> savePlayer(@Valid @RequestBody PlayerRequest playerRequest){
-//        Random random = new Random();
-//        if(random.nextBoolean()){
-//            return ResponseEntity.status(HttpStatus.CREATED).build();
-//        }
-//        throw new BadRequestException("Invalid request");
-//
-//    }
 
     @Operation(summary = "save player", description = "save player.")
     @PostMapping()
-    public PlayerResponse savePlayer(@Valid @RequestBody PlayerRequest playerRequest){
-      return new PlayerResponse(
-              playerRequest.firstName(),
-              playerRequest.lastName(),
-              playerRequest.birthDay(),
-              new Rank(1,10)
-      );
-
+    public ResponseEntity<String> savePlayer(@Valid @RequestBody PlayerRequest playerRequest){
+      return playerService.createPlayer(playerRequest);
     }
 
-
-
-    @Operation(summary = "update the players", description = "maj the player.")
-    @PutMapping("/{id}")
-    public PlayerResponse updatePlayerById(@PathVariable("id") String id, @Valid @RequestBody PlayerRequest playerRequest){
-        return null;
-    }
 
     @Operation(summary = "update the players", description = "maj the player.")
     @PutMapping()
-    public PlayerResponse updatePlayer(@Valid @RequestBody PlayerRequest playerRequest){
-        return null;
+    public ResponseEntity<PlayerResponse> updatePlayer(@Valid @RequestBody PlayerRequest playerRequest){
+        return playerService.updatePlayer(playerRequest);
+    }
+
+    @Operation(summary = "update the player by id", description = "maj the player.")
+    @PutMapping("/{id}")
+    public ResponseEntity<PlayerResponse> updatePlayerById(@Valid @RequestBody PlayerRequest playerRequest, @PathVariable("id") String id){
+        return playerService.updatePlayerById(id,playerRequest);
     }
 
 
     @Operation(summary = "delete he players", description = "remove the player.")
     @DeleteMapping("/{id}")
-    public void deletePlayerById(@PathVariable("id") String id){
-
-    }
-
-    @Operation(summary = "find the players", description = "Find player by name,rank or position, datebirth.")
-    @GetMapping("/search")
-    public List<PlayerResponse> getPlayerSearch(@RequestParam(required = false) String lastName,
-                                                @RequestParam(required = false) LocalDate dateBirth
-
-                                                ){
-        return null;
+    public ResponseEntity<String> deletePlayerById(@PathVariable("id") String id){
+        return playerService.deletePlayerById(id);
     }
 
 }
