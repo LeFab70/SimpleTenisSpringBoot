@@ -1,6 +1,7 @@
 package org.leFab.players.dto;
 
 import jakarta.validation.constraints.*;
+import org.leFab.rank.dto.Rank;
 
 import java.time.LocalDate;
 
@@ -16,6 +17,7 @@ public record PlayerRequest(
 //                message = "Date must be in format yyyy-MM-dd"
 //        )
         LocalDate birthDay,
-        String rankId
+        @NotNull(message = "Not null player rank")
+        Rank rank
 ) {
 }

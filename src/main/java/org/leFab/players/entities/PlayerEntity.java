@@ -1,6 +1,8 @@
 package org.leFab.players.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,8 +27,12 @@ public class PlayerEntity {
     private String lastName;
     @Column(name = "birth_day",nullable = false)
     private LocalDate birthDay;
-    @Column(name = "rank_id",nullable = false)
-    private Integer rankId;
+    @Column(name = "position",nullable = false)
+    @Min(value = 0)
+    @Max(value = 1000)
+    private Integer position;
     @Column(name = "points",nullable = false)
+    @Min(value = 0)
+    @Max(value = 25000)
     private Integer points;
 }

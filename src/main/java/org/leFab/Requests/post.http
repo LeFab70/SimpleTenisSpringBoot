@@ -3,10 +3,13 @@ POST http://localhost:8080/api/tennis/players
 Content-Type: application/json
 
 {
-  "firstName": "",
-  "lastName": "",
+  "firstName": " test",
+  "lastName": "tes",
   "birthDay": "2025-10-29",
-  "rank": 1
+  "rank": {
+    "points": 12,
+    "position": 123
+  }
 }
 
 ###

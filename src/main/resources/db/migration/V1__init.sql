@@ -11,6 +11,11 @@ CREATE TABLE players
     points INTEGER NOT NULL,
     CONSTRAINT pk_players PRIMARY KEY (player_id)
 );
+ALTER TABLE players
+    ADD CONSTRAINT chk_position_range CHECK (position >= 0 AND position <= 1000);
+
+ALTER TABLE players
+    ADD CONSTRAINT chk_points_range CHECK (points >= 0 AND points <= 25000);
 
 -- Insertion de quelques données de test
 INSERT INTO players (first_name, last_name, birth_day, rank_id, points)
