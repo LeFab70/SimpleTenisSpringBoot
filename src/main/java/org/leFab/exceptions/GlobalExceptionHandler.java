@@ -36,6 +36,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ResourceAlreadyExist.class)
+    public ResponseEntity<?> handleResourceAlreadyExist(ResourceAlreadyExist ex) {
+        Map<String ,Object> errorDetails = new HashMap<>();
+        errorDetails.put("error", "Resource Already Exist");
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("timestamp", LocalDate.now());
+        errorDetails.put("status", HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {

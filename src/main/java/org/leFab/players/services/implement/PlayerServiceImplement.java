@@ -2,6 +2,7 @@ package org.leFab.players.services.implement;
 
 import lombok.RequiredArgsConstructor;
 import org.leFab.exceptions.BadRequestException;
+import org.leFab.exceptions.ResourceAlreadyExist;
 import org.leFab.exceptions.ResourceNotFoundException;
 import org.leFab.players.dto.PlayerRequest;
 import org.leFab.players.dto.PlayerResponse;
@@ -27,10 +28,10 @@ public class PlayerServiceImplement implements PlayerService {
             throw new BadRequestException("Body is empty,Player not saved");
 
         Optional<PlayerEntity> foundPlayer=playerRepository.findOneByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndBirthDay(playerRequest.firstName(), playerRequest.lastName(), playerRequest.birthDay());
-        if(foundPlayer.isPresent())
-            throw new BadRequestException("Player already exists");
+    if (foundPlayer.isPresent())
+        throw new ResourceAlreadyExist("Player already exists");
 
-        PlayerEntity playerEntity = PlayerEntity.builder()
+    PlayerEntity playerEntity = PlayerEntity.builder()
                         .firstName(playerRequest.firstName())
                                 .lastName(playerRequest.lastName())
                 .birthDay(playerRequest.birthDay())
@@ -76,7 +77,7 @@ public class PlayerServiceImplement implements PlayerService {
         //check if player already exists
         Optional<PlayerEntity> foundPlayer=playerRepository.findOneByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndBirthDay(playerRequest.firstName(), playerEntity.getLastName(), playerEntity.getBirthDay());
        if(foundPlayer.isPresent() && !foundPlayer.get().getId().equals(playerEntity.getId()))
-           throw new BadRequestException("Player already exists");
+           throw new ResourceAlreadyExist("Player already exists");
 
        return getPlayerResponse(playerRequest,playerEntity);
     }
