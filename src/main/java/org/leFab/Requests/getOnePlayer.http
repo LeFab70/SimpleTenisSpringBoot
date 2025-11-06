@@ -1,0 +1,5 @@
+### GET request to example server
+//
+
+GET http://localhost:8080/api/tennis/players/search?firstName=novak&lastName=djokovic&birthDay=1987-05-22
+###

@@ -47,69 +47,40 @@ public class PlayerController {
 
     @Operation(summary = "Find the players by lastname firstname datebirth", description = "Retrieves the player by name.")
     @GetMapping("/search")
-    public ResponseEntity<PlayerResponse> getPlayer(@RequestParam(required = false,name = "lastName") String lastName,
-                                    @RequestParam(required = false,name = "firstName") String firstName,
-                                    @RequestParam(required = false,name = "birthDay") LocalDate birthDay)
+    public ResponseEntity<PlayerResponse> getPlayer(@RequestParam(name = "lastName") String lastName,
+                                    @RequestParam(name = "firstName") String firstName,
+                                    @RequestParam(name = "birthDay") LocalDate birthDay)
     {
-        //Optional<PlayerResponse> playerResponse = playerService.getPlayerSearch(firstName,lastName,birthDay);
-        //if(playerResponse.isPresent())
             return ResponseEntity.ok(playerService.getPlayerSearch(firstName,lastName,birthDay));
-        //else
-         //throw new ResourceNotFoundException("Player not found for this parameters");
-    }
+           }
 
 
     @Operation(summary = "Find the players by id", description = "Retrieves the player by name.")
     @GetMapping("/{id}")
     public ResponseEntity<PlayerResponse> getPlayerById(@PathVariable(value = "id") String id){
-        //PlayerResponse playerResponse = playerService.getPlayerById(id);
-        return ResponseEntity.ok(playerService.getPlayerById(id));
-//        return playerResponse.map(ResponseEntity::ok)
-//                .orElseThrow(()->new ResourceNotFoundException("Player not found for this id :"+id));
-
+             return ResponseEntity.ok(playerService.getPlayerById(id));
     }
 
 
     @Operation(summary = "save player", description = "save player.")
     @PostMapping()
-    public ResponseEntity<String> savePlayer(@Valid @RequestBody PlayerRequest playerRequest){
-      Boolean result= playerService.createPlayer(playerRequest);
-      if(result)
-          return ResponseEntity.ok("Player saved");
-      else
-          throw new BadRequestException("Player not saved");
+    public ResponseEntity<PlayerResponse> savePlayer(@Valid @RequestBody PlayerRequest playerRequest){
+      return ResponseEntity.ok(playerService.createPlayer(playerRequest));
     }
 
-
-    @Operation(summary = "update the players", description = "maj the player.")
-    @PutMapping()
-    public ResponseEntity<PlayerResponse> updatePlayer(@Valid @RequestBody PlayerRequest playerRequest){
-       PlayerResponse playerResponse= playerService.updatePlayer(playerRequest);
-       if(playerResponse!=null)
-           return ResponseEntity.ok(playerResponse);
-       else
-           throw new BadRequestException("Player not updated");
-    }
 
     @Operation(summary = "update the player by id", description = "maj the player.")
     @PutMapping("/{id}")
     public ResponseEntity<PlayerResponse> updatePlayerById(@Valid @RequestBody PlayerRequest playerRequest, @PathVariable("id") String id){
-        PlayerResponse playerResponse= playerService.updatePlayer(playerRequest);
-        if(playerResponse!=null)
-            return ResponseEntity.ok(playerResponse);
-        else
-            throw new BadRequestException("Player not updated");
+        return ResponseEntity.ok(playerService.updatePlayerById(id,playerRequest));
     }
 
 
-    @Operation(summary = "delete he players", description = "remove the player.")
+    @Operation(summary = "delete the player", description = "remove the player.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePlayerById(@PathVariable(name ="id",required = true) String id){
-       Boolean result=playerService.deletePlayerById(id);
-       if(result)
-           return ResponseEntity.ok("Player deleted");
-       else
-           throw new BadRequestException("Player not deleted");
+    public ResponseEntity<Void> deletePlayerById(@PathVariable(name ="id",required = true) String id){
+       playerService.deletePlayerById(id);
+       return ResponseEntity.noContent().build();
     }
 
 }

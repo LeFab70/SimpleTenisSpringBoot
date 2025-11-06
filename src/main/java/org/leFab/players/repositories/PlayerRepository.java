@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface PlayerRepository extends JpaRepository<PlayerEntity, Long> {
     //Optional<PlayerEntity> findByFirstNameAndLastName(String firstName, String lastName);
-    Optional<PlayerEntity> findByFirstNameAndLastNameAndBirthDayIgnoreCase(String firstName, String lastName, LocalDate birthDay);
+    Optional<PlayerEntity> findOneByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndBirthDay(String firstName, String lastName, LocalDate birthDay);
 }

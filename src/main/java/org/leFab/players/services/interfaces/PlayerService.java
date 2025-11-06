@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface PlayerService {
     //create player
-    public Boolean createPlayer(PlayerRequest playerRequest);
+    public PlayerResponse createPlayer(PlayerRequest playerRequest);
 
 
     //delete player
-    public Boolean deletePlayerById(String id);
-    public Boolean deletePlayer(String firstName, String lastName);
+    public void deletePlayerById(String id);
+    public void deletePlayer(String firstName, String lastName);
 
     //update player
-    public PlayerResponse updatePlayer(PlayerRequest playerRequest);
+
     public PlayerResponse updatePlayerById(String id, PlayerRequest playerRequest);
 
 

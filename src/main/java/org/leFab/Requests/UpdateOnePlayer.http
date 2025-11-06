@@ -1,0 +1,16 @@
+### GET request to example server
+//
+
+PUT http://localhost:8080/api/tennis/players/30
+Content-Type: application/json
+
+{
+  "firstName": " jourTest30update",
+  "lastName": "last name test30update",
+  "birthDay": "2020-10-30",
+  "rank": {
+    "points": 88,
+    "position": 288
+  }
+}
+###

@@ -22,9 +22,14 @@ public class PlayerServiceImplement implements PlayerService {
     private final PlayerRepository playerRepository;
 
     @Override
-    public Boolean createPlayer(PlayerRequest playerRequest) {
+    public PlayerResponse createPlayer(PlayerRequest playerRequest) {
         if(playerRequest==null)
-            return false;
+            throw new BadRequestException("Body is empty,Player not saved");
+
+        Optional<PlayerEntity> foundPlayer=playerRepository.findOneByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndBirthDay(playerRequest.firstName(), playerRequest.lastName(), playerRequest.birthDay());
+        if(foundPlayer.isPresent())
+            throw new BadRequestException("Player already exists");
+
         PlayerEntity playerEntity = PlayerEntity.builder()
                         .firstName(playerRequest.firstName())
                                 .lastName(playerRequest.lastName())
@@ -33,44 +38,31 @@ public class PlayerServiceImplement implements PlayerService {
                 .position(playerRequest.rank().position())
                                         .build();
 
-        playerRepository.save(playerEntity);
-        return true;
+        PlayerEntity savePlayer=playerRepository.save(playerEntity);
+        return new PlayerResponse(
+                savePlayer.getFirstName(),
+                savePlayer.getLastName(),
+                savePlayer.getBirthDay(),
+                new Rank(savePlayer.getPoints(),savePlayer.getPosition())
+        );
     }
 
     @Override
-    public Boolean deletePlayerById(String id) {
+    public void deletePlayerById(String id) {
         if (id == null)
-            return false;
-        playerRepository.deleteById(Long.valueOf(id));
-        return true;
+            throw new BadRequestException("Id is required, Player not deleted");
+        PlayerEntity playerEntity = playerRepository.findById(Long.valueOf(id)).orElseThrow(()->new ResourceNotFoundException("Player not found"));
+        playerRepository.delete(playerEntity);
     }
 
     @Override
-    public Boolean deletePlayer(String firstName, String lastName) {
+    public void deletePlayer(String firstName, String lastName) {
 
-        return null;
+        if(firstName==null || lastName==null)
+            throw new BadRequestException("Player not deleted");
     }
 
-    @Override
-    public PlayerResponse updatePlayer(PlayerRequest playerRequest) {
 
-        if(playerRequest==null)
-            throw new BadRequestException("Player not saved");
-
-        //check if player already exists ?
-
-
-        PlayerEntity playerEntity = PlayerEntity.builder()
-                .firstName(playerRequest.firstName())
-                .lastName(playerRequest.lastName())
-                .birthDay(playerRequest.birthDay())
-                .points(playerRequest.rank().points())
-                .position(playerRequest.rank().position())
-                .build();
-
-        playerRepository.save(playerEntity);
-        return new PlayerResponse(playerRequest.firstName(),playerRequest.lastName(),playerRequest.birthDay(),playerRequest.rank());
-    }
 
     @Override
     public PlayerResponse updatePlayerById(String id, PlayerRequest playerRequest) {
@@ -79,22 +71,30 @@ public class PlayerServiceImplement implements PlayerService {
         if(playerRequest==null || id==null)
             throw new BadRequestException("Player not saved");
 
-        //check if player already exists ?
-        if(!playerRepository.existsById(Long.valueOf(id)))
-            throw new BadRequestException("Player not found");
+        //check if player exists ?
+       PlayerEntity playerEntity=playerRepository.findById(Long.valueOf(id)).orElseThrow(()->new ResourceNotFoundException("Player not found"));
+        //check if player already exists
+        Optional<PlayerEntity> foundPlayer=playerRepository.findOneByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndBirthDay(playerRequest.firstName(), playerEntity.getLastName(), playerEntity.getBirthDay());
+       if(foundPlayer.isPresent() && !foundPlayer.get().getId().equals(playerEntity.getId()))
+           throw new BadRequestException("Player already exists");
 
+       return getPlayerResponse(playerRequest,playerEntity);
+    }
 
-        PlayerEntity playerEntity = PlayerEntity.builder()
-                .firstName(playerRequest.firstName())
-                .lastName(playerRequest.lastName())
-                .birthDay(playerRequest.birthDay())
-                .points(playerRequest.rank().points())
-                .position(playerRequest.rank().position())
-                .build();
+    private PlayerResponse getPlayerResponse(PlayerRequest playerRequest,PlayerEntity playerEntity) {
+        playerEntity.setFirstName(playerRequest.firstName());
+        playerEntity.setLastName(playerRequest.lastName());
+        playerEntity.setBirthDay(playerRequest.birthDay());
+        playerEntity.setPoints(playerRequest.rank().points());
+        playerEntity.setPosition(playerRequest.rank().position());
+        PlayerEntity updated = playerRepository.save(playerEntity);
 
-        playerRepository.save(playerEntity);
-        return new PlayerResponse(playerRequest.firstName(),playerRequest.lastName(),playerRequest.birthDay(),playerRequest.rank());
-
+        return new PlayerResponse(
+                updated.getFirstName(),
+                updated.getLastName(),
+                updated.getBirthDay(),
+                new Rank(updated.getPoints(), updated.getPosition())
+        );
     }
 
     @Override
@@ -115,8 +115,11 @@ public class PlayerServiceImplement implements PlayerService {
 
     @Override
     public PlayerResponse getPlayerSearch(String firstName, String lastName, LocalDate dateBirth) {
-       Optional<PlayerEntity> playerEntity = playerRepository.findByFirstNameAndLastNameAndBirthDayIgnoreCase(firstName,lastName,dateBirth);
-    if (playerEntity.isEmpty())
+       Optional<PlayerEntity> playerEntity = playerRepository.findOneByFirstNameIgnoreCaseAndLastNameIgnoreCaseAndBirthDay(firstName,lastName,dateBirth);
+        //System.out.println("Recherche : " + firstName + " " + lastName + " " + dateBirth);
+        //System.out.println("Résultat : " + playerEntity.isPresent());
+
+        if (playerEntity.isEmpty())
             throw new ResourceNotFoundException("Player not found");
        return (new PlayerResponse(playerEntity.get().getFirstName(),playerEntity.get().getLastName(),playerEntity.get().getBirthDay(),new Rank(playerEntity.get().getPoints(),playerEntity.get().getPosition())));
     }
