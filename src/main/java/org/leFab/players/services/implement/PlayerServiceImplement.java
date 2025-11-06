@@ -115,13 +115,20 @@ public class PlayerServiceImplement implements PlayerService {
 
     @Override
     public Optional<PlayerResponse> getPlayerSearch(String firstName, String lastName, LocalDate dateBirth) {
-        return null;
+       Optional<PlayerEntity> playerEntity = playerRepository.findByFirstNameAndLastNameAndBirthDay(firstName,lastName,dateBirth);
+       if(playerEntity.isEmpty())
+           throw new BadRequestException("Player not found");
+       return Optional.of(new PlayerResponse(playerEntity.get().getFirstName(),playerEntity.get().getLastName(),playerEntity.get().getBirthDay(),new Rank(playerEntity.get().getPoints(),playerEntity.get().getPosition())));
     }
 
 
     @Override
     public Optional<PlayerResponse> getPlayerById(String id) {
-        return null;
+
+        Optional<PlayerEntity> playerEntity = playerRepository.findById(Long.valueOf(id));
+        if(playerEntity.isEmpty())
+            throw new BadRequestException("Player not found");
+        return Optional.of(new PlayerResponse(playerEntity.get().getFirstName(),playerEntity.get().getLastName(),playerEntity.get().getBirthDay(),new Rank(playerEntity.get().getPoints(),playerEntity.get().getPosition())));
     }
 
 
