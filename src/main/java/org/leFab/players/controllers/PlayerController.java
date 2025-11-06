@@ -10,18 +10,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.leFab.exceptions.BadRequestException;
-import org.leFab.exceptions.ResourceNotFoundException;
+
 import org.leFab.players.dto.PlayerRequest;
 import org.leFab.players.dto.PlayerResponse;
 import org.leFab.players.services.interfaces.PlayerService;
-import org.leFab.rank.dto.Rank;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-//import java.util.Collections;
+
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("api/tennis/players")
@@ -51,23 +51,22 @@ public class PlayerController {
                                     @RequestParam(required = false,name = "firstName") String firstName,
                                     @RequestParam(required = false,name = "birthDay") LocalDate birthDay)
     {
-        Optional<PlayerResponse> playerResponse = playerService.getPlayerSearch(firstName,lastName,birthDay);
-        if(playerResponse.isPresent())
-            return ResponseEntity.ok(playerResponse.get());
-        else
-         throw new ResourceNotFoundException("Player not found for this parameters");
+        //Optional<PlayerResponse> playerResponse = playerService.getPlayerSearch(firstName,lastName,birthDay);
+        //if(playerResponse.isPresent())
+            return ResponseEntity.ok(playerService.getPlayerSearch(firstName,lastName,birthDay));
+        //else
+         //throw new ResourceNotFoundException("Player not found for this parameters");
     }
 
 
     @Operation(summary = "Find the players by id", description = "Retrieves the player by name.")
     @GetMapping("/{id}")
-    public ResponseEntity<PlayerResponse> getPlayerById(@PathVariable("id") String id){
+    public ResponseEntity<PlayerResponse> getPlayerById(@PathVariable(value = "id") String id){
+        //PlayerResponse playerResponse = playerService.getPlayerById(id);
+        return ResponseEntity.ok(playerService.getPlayerById(id));
+//        return playerResponse.map(ResponseEntity::ok)
+//                .orElseThrow(()->new ResourceNotFoundException("Player not found for this id :"+id));
 
-        Optional<PlayerResponse> playerResponse = playerService.getPlayerById(id);
-        if(playerResponse.isPresent())
-            return ResponseEntity.ok(playerResponse.get());
-        else
-            throw new ResourceNotFoundException("Player not found for this parameters");
     }
 
 

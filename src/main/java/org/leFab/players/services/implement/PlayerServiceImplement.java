@@ -2,13 +2,13 @@ package org.leFab.players.services.implement;
 
 import lombok.RequiredArgsConstructor;
 import org.leFab.exceptions.BadRequestException;
+import org.leFab.exceptions.ResourceNotFoundException;
 import org.leFab.players.dto.PlayerRequest;
 import org.leFab.players.dto.PlayerResponse;
 import org.leFab.players.entities.PlayerEntity;
 import org.leFab.players.repositories.PlayerRepository;
 import org.leFab.players.services.interfaces.PlayerService;
 import org.leFab.rank.dto.Rank;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -114,21 +114,21 @@ public class PlayerServiceImplement implements PlayerService {
     }
 
     @Override
-    public Optional<PlayerResponse> getPlayerSearch(String firstName, String lastName, LocalDate dateBirth) {
-       Optional<PlayerEntity> playerEntity = playerRepository.findByFirstNameAndLastNameAndBirthDay(firstName,lastName,dateBirth);
-       if(playerEntity.isEmpty())
-           throw new BadRequestException("Player not found");
-       return Optional.of(new PlayerResponse(playerEntity.get().getFirstName(),playerEntity.get().getLastName(),playerEntity.get().getBirthDay(),new Rank(playerEntity.get().getPoints(),playerEntity.get().getPosition())));
+    public PlayerResponse getPlayerSearch(String firstName, String lastName, LocalDate dateBirth) {
+       Optional<PlayerEntity> playerEntity = playerRepository.findByFirstNameAndLastNameAndBirthDayIgnoreCase(firstName,lastName,dateBirth);
+    if (playerEntity.isEmpty())
+            throw new ResourceNotFoundException("Player not found");
+       return (new PlayerResponse(playerEntity.get().getFirstName(),playerEntity.get().getLastName(),playerEntity.get().getBirthDay(),new Rank(playerEntity.get().getPoints(),playerEntity.get().getPosition())));
     }
 
 
     @Override
-    public Optional<PlayerResponse> getPlayerById(String id) {
+    public PlayerResponse getPlayerById(String id) {
 
         Optional<PlayerEntity> playerEntity = playerRepository.findById(Long.valueOf(id));
-        if(playerEntity.isEmpty())
-            throw new BadRequestException("Player not found");
-        return Optional.of(new PlayerResponse(playerEntity.get().getFirstName(),playerEntity.get().getLastName(),playerEntity.get().getBirthDay(),new Rank(playerEntity.get().getPoints(),playerEntity.get().getPosition())));
+    if (playerEntity.isEmpty())
+        throw new ResourceNotFoundException("Player not found");
+    return (new PlayerResponse(playerEntity.get().getFirstName(),playerEntity.get().getLastName(),playerEntity.get().getBirthDay(),new Rank(playerEntity.get().getPoints(),playerEntity.get().getPosition())));
     }
 
 

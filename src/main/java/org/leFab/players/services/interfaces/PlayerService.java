@@ -5,7 +5,6 @@ import org.leFab.players.dto.PlayerResponse;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface PlayerService {
     //create player
@@ -23,8 +22,8 @@ public interface PlayerService {
 
     //get player(s)
     public List<PlayerResponse> getPlayers();
-    public  Optional<PlayerResponse> getPlayerSearch(String firstName, String lastName, LocalDate dateBirth);
-    public Optional<PlayerResponse> getPlayerById(String id);
+    public PlayerResponse getPlayerSearch(String firstName, String lastName, LocalDate dateBirth);
+    public PlayerResponse getPlayerById(String id);
 
 
 
