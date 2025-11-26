@@ -15,6 +15,7 @@ import org.leFab.players.dto.PlayerRequest;
 import org.leFab.players.dto.PlayerResponse;
 import org.leFab.players.services.interfaces.PlayerService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,7 @@ public class PlayerController {
                     content = {@Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = PlayerResponse.class)))})})
     @GetMapping()
+    //@ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<PlayerResponse>> getAllPlayers(){
         return ResponseEntity.ok(playerService.getPlayers());// Collections.emptyList();
     }
@@ -65,7 +67,7 @@ public class PlayerController {
     @Operation(summary = "save player", description = "save player.")
     @PostMapping()
     public ResponseEntity<PlayerResponse> savePlayer(@Valid @RequestBody PlayerRequest playerRequest){
-      return ResponseEntity.ok(playerService.createPlayer(playerRequest));
+      return ResponseEntity.status(HttpStatus.CREATED).body(playerService.createPlayer(playerRequest));
     }
 
 
