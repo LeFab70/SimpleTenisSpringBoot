@@ -39,16 +39,20 @@ public class PlayerController {
             @ApiResponse(responseCode = "200", description = "Players list",
 
                     content = {@Content(mediaType = "application/json",
+
                             array = @ArraySchema(schema = @Schema(implementation = PlayerResponse.class)))})})
+    @ApiResponse(responseCode = "403",description = "this resource not allow for this user")
     @GetMapping()
     //@ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<PlayerResponse>> getAllPlayers(){
         return ResponseEntity.ok(playerService.getPlayers());// Collections.emptyList();
-    }
+     }
 
 
     @Operation(summary = "Find the players by lastname firstname datebirth", description = "Retrieves the player by name.")
     @GetMapping("/search")
+    @ApiResponse(responseCode = "403",description = "this resource not allow for this user")
+
     public ResponseEntity<PlayerResponse> getPlayer(@RequestParam(name = "lastName") String lastName,
                                     @RequestParam(name = "firstName") String firstName,
                                     @RequestParam(name = "birthDay") LocalDate birthDay)
@@ -59,6 +63,8 @@ public class PlayerController {
 
     @Operation(summary = "Find the players by id", description = "Retrieves the player by name.")
     @GetMapping("/{id}")
+    @ApiResponse(responseCode = "403",description = "this resource not allow for this user")
+
     public ResponseEntity<PlayerResponse> getPlayerById(@PathVariable(value = "id") String id){
              return ResponseEntity.ok(playerService.getPlayerById(id));
     }
